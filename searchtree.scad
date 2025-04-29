@@ -1,17 +1,17 @@
 /*
-A Set/Map implemented as a binary search tree.
-The tree no balancing strategy; see treap.scad for a balanced tree.
-API provides both a set and map view, simultaneously;
-therefore, the same tree can be used at the same time as a set and as a map;
-retrieving a value for a key that was inserted as a set will provide an `undef`.
+  A Set/Map implemented as a binary search tree.
+  The tree no balancing strategy; see treap.scad for a balanced tree.
+  API provides both a set and map view, simultaneously;
+  therefore, the same tree can be used at the same time as a set and as a map;
+  retrieving a value for a key that was inserted as a set will provide an `undef`.
 
-To avoid namespace collition, all top level definitions start with `stree_`.
+  To avoid namespace collition, all top level definitions start with `stree_`.
 
-### Implementation details
+  ### Implementation details
 
-Outer structure: `[root, cmp]`.
-Node structure: `[key, left, right]` or `[key, left, right, value]`.
-Absent node: `undef`.
+  Outer structure: `[root, cmp]`.
+  Node structure: `[key, left, right]` or `[key, left, right, value]`.
+  Absent node: `undef`.
 */
 
 stree_new = function(cmp) [undef, cmp];
@@ -66,6 +66,37 @@ stree_set = function(st, key, val)
       : stree_mknode(okey, val, left, right)
     )
   ) [ set(st[0]), cmp ];
+
+stree_delete = function(st, key)
+  let (
+    cmp = st[1],
+    del = function(node) (
+      is_undef(node) ? node
+      : let (
+        okey = node[0], val = node[3],
+        left = node[1], right = node[2],
+        c = cmp(key,okey)
+      ) c < 0 ? stree_mknode(okey, val, del(left), right)
+      : c > 0 ? stree_mknode(okey, val, left, del(right))
+      : join(left, right)
+    ),
+    join = function(left, right) (
+      is_undef(left) ? right
+      : is_undef(right) ? left
+      : let (disc = del1(right))
+      stree_mknode(disc[0], disc[1], left, disc[2])
+    ),
+    del1 = function(node) (
+      let (
+        key = node[0], val = node[3],
+        left = node[1], right = node[2]
+      )
+      is_undef(left) ? [key, val, right]
+      : let (r = del1(left)) [r[0], r[1], stree_mknode(key,val, r[2],right)]
+    )
+  ) [ del(st[0]), cmp ];
+
+stree_remove = stree_delete;
 
 stree_map = function(st, f)
   let (

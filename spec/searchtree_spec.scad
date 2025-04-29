@@ -10,10 +10,9 @@ for (i = [0:9]) {
     xs = rands(0,1, N),
     sxs = quicksort(xs),
     st = foldl(stree_new(compare), xs, stree_add),
-    ys = stree_array(st)
   ) {
     assert_eq(N, stree_size(st));
-    assert_eq(sxs, ys);
+    assert_eq(sxs, stree_array(st));
     assert_true(!stree_has(sxs[0]-1));
     for (i = [0:N-1]) {
       let (
@@ -25,6 +24,20 @@ for (i = [0:9]) {
       }
     }
     assert_true(!stree_has(sxs[N-1]+1));
+
+    let (
+      rxs = slice(xs, [0:2:N-1]),
+      st2 = foldl(st, rxs, stree_delete)
+    ) {
+      assert_eq(N-len(rxs), stree_size(st2));
+      for (i = [0:N-1]) {
+        let (
+          key = xs[i],
+        ) {
+          assert_eq(i % 2 == 1, stree_has(st2, key));
+        }
+      }
+    }
   }
 }
 
@@ -52,5 +65,23 @@ for (i = [0:9]) {
       }
     }
     assert_true(!stree_has(sps[N-1][0]+1));
+
+    let (
+      rxs = slice(xs, [0:2:N-1]),
+      st2 = foldl(st, rxs, stree_delete)
+    ) {
+      assert_eq(N-len(rxs), stree_size(st2));
+      for (i = [0:N-1]) {
+        let (
+          key = ps[i][0],
+          val = ps[i][1]
+        ) {
+          assert_eq(i % 2 == 1, stree_has(st2, key));
+          if (i % 2 == 1) {
+            assert_eq(val, stree_get(st2, key));
+          }
+        }
+      }
+    }
   }
 }
