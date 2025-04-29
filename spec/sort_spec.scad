@@ -2,6 +2,9 @@ include <../assert.scad>
 include <../sort.scad>
 include <../array.scad>
 
+assert_eq(
+  [0], [for (i = [0:2:0]) i])
+
 for (contest = [
     [true, []],
     [true, [1]],
@@ -32,6 +35,7 @@ for (contest = [
   xs = contest[1];
   ys = contest[2];
   assert_eq(expect, merge(xs, ys));
+  assert_eq(expect, merge(xs, ys, compare));
 }
 
 module assert_sorting(sort, xs) {
@@ -40,15 +44,36 @@ module assert_sorting(sort, xs) {
     str("Sorted array length ", nys,
       " differs from original array length ", nxs));
   assert_true(is_sorted(ys), message = function()
-    str("Produced an unsorted array ", ys));
+    str("Returned an unsorted array ", ys));
+
+  q = perm_sort(xs, sort);
+  assert_eq(len(xs), len(q), message = function(nxs, nq)
+    str("Sorted permutation length ", nq,
+      " differs from original array length ", nxs));
+  assert_true(perm_is_sorted(xs, q), message = function()
+    str("Returned a permutation ", q, " not sorting the array ", xs));
+  assert_true(is_sorted(perm_apply(xs,q)), message = function()
+    str("Application of permutation ", q,
+      " did not generated a sorted array for ", xs));
 }
 
-for (xs = [
-    [],
-    [1],
-    array([0:10]),
-    reverse(array([0:10])),
-    rands(0,1, 100),
+for (sort = [
+    quicksort0,
+    quicksort3,
+    quicksort,
+    mergesort,
+    function(xs, cmp=compare) quicksort0(xs, cmp),
+    function(xs, cmp=compare) quicksort3(xs, cmp),
+    function(xs, cmp=compare) quicksort(xs, cmp),
+    function(xs, cmp=compare) mergesort(xs, cmp)
   ]) {
-  assert_sorting(quicksort, xs);
+  for (xs = [
+      [],
+      [1],
+      array([0:10]),
+      reverse(array([0:10])),
+      rands(0,1, 100),
+    ]) {
+    assert_sorting(sort, xs);
+  }
 }
