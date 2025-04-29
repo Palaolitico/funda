@@ -1,18 +1,21 @@
 /*
-  A Set/Map implemented as a binary search tree.
-  The tree no balancing strategy; see treap.scad for a balanced tree.
-  API provides both a set and map view, simultaneously;
-  therefore, the same tree can be used at the same time as a set and as a map;
-  retrieving a value for a key that was inserted as a set will provide an `undef`.
+A Set/Map implemented as a binary search tree.
+The tree no balancing strategy; see treap.scad for a balanced tree.
+API provides both a set and map view, simultaneously;
+therefore, the same tree can be used at the same time as a set and as a map;
+retrieving a value for a key that was inserted as a set will provide an `undef`.
 
-  To avoid namespace collition, all top level definitions start with `stree_`.
+To avoid namespace collition, all top level definitions start with `stree_`.
 
-  ### Implementation details
+### Implementation details
 
-  Outer structure: `[root, cmp]`.
-  Node structure: `[key, left, right]` or `[key, left, right, value]`.
-  Absent node: `undef`.
+Outer structure: `[root, cmp]`.
+Node structure: `[key, left, right]` or `[key, left, right, value]`.
+Absent node: `undef`.
 */
+
+stree_mknode = function(key, val, left, right)
+  is_undef(val) ? [key, left, right] : [key, left, right, val];
 
 stree_new = function(cmp) [undef, cmp];
 
@@ -44,13 +47,10 @@ stree_find = function(st, key)
 
 stree_has = function(st, key) !is_undef(stree_find(st, key));
 
-stree_add = function(st, key) stree_set(st, key, undef);
-
 stree_get = function(st, key)
   let (node = stree_find(st, key)) is_undef(node) ? undef : node[3];
 
-stree_mknode = function(key, val, left, right)
-  is_undef(val) ? [key, left, right] : [key, left, right, val];
+stree_add = function(st, key) stree_set(st, key, undef);
 
 stree_set_entry = function(st, entry) stree_set(st, entry[0], entry[1]);
 
