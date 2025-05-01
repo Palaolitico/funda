@@ -3,13 +3,24 @@ Funda: FUNctional Data structures & Algoritms for OpenSCAD
 
 This project is an experiment on Data Structures and Algoritms with OpenSCAD.
 
-It is functional, by force, because OpenSCAD has no way to modify a variable
+It is pure functional programming, by force,
+because OpenSCAD has no way to modify a variable
 or a component in a structural value.
+
+API
+----------------------------------------------------------------------
 
 Testing
 -----------------------------------------------------------------------
 
-Currently
+This project has a lot of unit testing.
+I have never seen a OpenSCAD with test, 
+therefore I built a [pretty simple framework](./assert.scad) based con
+`assert`.
+The main drawback is that the testing process stops on the first failure.
+
+All the testing code is in the [spec folder](./spec).
+Currently, the *recommended* way to run it is:
 ```
 for spec in spec/*_spec.scad; do echo $spec; time openscad -o /dev/null --export-format binstl $spec; done
 ```
