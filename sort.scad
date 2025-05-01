@@ -49,7 +49,7 @@ is_sorted = function(xs, le = less_equal)
     sorted = function(i) i < 0 ? true : le(xs[i], xs[i+1]) && sorted(i-1)
   ) sorted(len(xs)-2);
 
-merge_le = function(xs, ys, le = less_equal)
+merge_sorted_le = function(xs, ys, le = less_equal)
   let (
     merge_acc = function(zs, a,b, c,d)
     a < b && (c == d || le(xs[a], ys[c]))
@@ -59,7 +59,7 @@ merge_le = function(xs, ys, le = less_equal)
     : zs
   ) merge_acc([], 0,len(xs), 0,len(ys));
 
-merge = function(xs, ys, cmp = undef)
+merge_sorted = function(xs, ys, cmp = undef)
   let (
     merge_fast = function(zs, a,b, c,d)
     a < b && (c == d || xs[a] <= ys[c])
@@ -93,7 +93,9 @@ mergesort = function(xs, cmp = undef)
     merge_pairs = function(xss) (
       let (n = len(xss))
       n == 1 ? xss[0] : merge_pairs(
-        [for (i = [0:2:n-1]) i == n-1 ? xss[i] : merge(xss[i], xss[i+1], cmp)]))
+        [for (i = [0:2:n-1])
+            i == n-1 ? xss[i] : merge_sorted(xss[i], xss[i+1], cmp)])
+    )
   ) len(xs) <= 1 ? xs : merge_pairs(create_init(xs));
 
 quicksort0 = function(xs, cmp = undef)

@@ -34,8 +34,8 @@ for (contest = [
   expect = contest[0];
   xs = contest[1];
   ys = contest[2];
-  assert_eq(expect, merge(xs, ys));
-  assert_eq(expect, merge(xs, ys, compare));
+  assert_eq(expect, merge_sorted(xs, ys));
+  assert_eq(expect, merge_sorted(xs, ys, compare));
 }
 
 module assert_sorting(sort, xs) {
@@ -72,7 +72,7 @@ for (sort = [
       [1],
       array([0:10]),
       reverse(array([0:10])),
-      rands(0,1, 100),
+      rands(0,1, 1000),
     ]) {
     assert_sorting(sort, xs);
   }

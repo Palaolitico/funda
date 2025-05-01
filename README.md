@@ -14,12 +14,12 @@ Testing
 -----------------------------------------------------------------------
 
 This project has a lot of unit testing.
-I have never seen a OpenSCAD with test, 
+I have never seen a OpenSCAD project with tests, 
 therefore I built a [pretty simple framework](./assert.scad) based con
 `assert`.
 The main drawback is that the testing process stops on the first failure.
 
-All the testing code is in the [spec folder](./spec).
+All the testing code is under the [spec folder](./spec).
 Currently, the *recommended* way to run it is:
 ```
 for spec in spec/*_spec.scad; do echo $spec; time openscad -o /dev/null --export-format binstl $spec; done
