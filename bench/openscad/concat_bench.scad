@@ -17,11 +17,12 @@ rng       fwd       bwd       bin
 0m0,194s  0m1,027s  0m1,023s  0m2,194s
 ```
 Surprisingly, binary strategy is slower than prepending/appending.
-OpenSCAD must doing some kind of optimization for appending
+OpenSCAD must be doing some kind of optimization for appending
 and prepending.
 
-Anyways, appending/prepending penalty grows superlinearly, but it is
-only 5 times slower on huge arrays.
+Anyways, appending/prepending penalty grows superlinearly,
+although it is *only* 5 times slower on huge arrays
+(was expecting more than that).
 Therefore, it is sensible to build arrays appending data
 when an array comprehension is not suitable.
 
@@ -29,7 +30,6 @@ Code to run this benchmark:
 ```
 for alg in rng fwd bwd bin; do for s in $(seq 10 19); do  echo $s $alg; time openscad -o /dev/null --export-format binstl -Dlog2=$s -Dcreate=create_$alg ideas/understanding/concat-perf.scad; done; done
 ```
-
 */
 
 create_rng = function(n) [for (i=[0:n-1]) i];
