@@ -60,24 +60,42 @@ merge_sorted_le = function(xs, ys, le = less_equal)
   ) merge_acc([], 0,len(xs), 0,len(ys));
 
 merge_sorted = function(xs, ys, cmp = undef)
-  let (
-    merge_fast = function(zs, a,b, c,d)
-    a < b && (c == d || xs[a] <= ys[c])
-    ? merge_fast(concat(zs,xs[a]), a+1,b, c,d)
-    : c < d && (a == b || ys[c] <= xs[a])
-    ? merge_fast(concat(zs,ys[c]), a,b, c+1,d)
-    : zs,
+  len(xs) == 0 ? ys
+  : len(ys) == 0 ? xs
+  : _funda_merge_sorted(xs, ys, cmp);
 
-    merge_gen = function(zs, a,b, c,d)
-    a < b && (c == d || cmp(xs[a], ys[c]) <= 0)
-    ? merge_gen(concat(zs,xs[a]), a+1,b, c,d)
-    : c < d && (a == b || cmp(ys[c], xs[a]) <= 0)
-    ? merge_gen(concat(zs,ys[c]), a,b, c+1,d)
-    : zs
-  )
+_funda_merge_sorted = function(xs, ys, cmp)
   is_undef(cmp)
-  ? merge_fast([], 0,len(xs), 0,len(ys))
-  : merge_gen([], 0,len(xs), 0,len(ys));
+  ? _funda_merge_fast(xs, ys)
+  : _funda_merge_gen(xs, ys, cmp);
+
+_funda_merge_fast = function(xs, ys)
+  let (m = len(xs), n = len(ys)) [
+    for (
+      i = 0, j = 0,
+        more = true,
+        xwins = xs[i] <= ys[j];
+      more;
+      i = xwins ? i+1 : i,
+        j = xwins ? j : j+1,
+        more = i < m || j < n,
+        xwins = j >= n || i < m && xs[i] <= ys[j],
+    ) xwins ? xs[i] : ys[j]
+  ];
+
+_funda_merge_gen = function(xs, ys, cmp)
+  let (m = len(xs), n = len(ys)) [
+    for (
+      i = 0, j = 0,
+        more = true,
+        xwins = cmp(xs[i], ys[j]) <= 0;
+      more;
+      i = xwins ? i+1 : i,
+        j = xwins ? j : j+1,
+        more = i < m || j < n,
+        xwins = j >= n || i < m && cmp(xs[i], ys[j]) <= 0,
+    ) xwins ? xs[i] : ys[j]
+  ];
 
 mergesort = function(xs, cmp = undef)
   let (
@@ -94,7 +112,7 @@ mergesort = function(xs, cmp = undef)
       let (n = len(xss))
       n == 1 ? xss[0] : merge_pairs(
         [for (i = [0:2:n-1])
-            i == n-1 ? xss[i] : merge_sorted(xss[i], xss[i+1], cmp)])
+            i == n-1 ? xss[i] : _funda_merge_sorted(xss[i], xss[i+1], cmp)])
     )
   ) len(xs) <= 1 ? xs : merge_pairs(create_init(xs));
 
