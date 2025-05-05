@@ -1,5 +1,6 @@
 include <../assert.scad>
 include <../array.scad>
+include <../sort.scad>
 
 assert_eq([1,2,3,4], array([1:4]));
 
@@ -24,6 +25,15 @@ let (ys = flatten_all([1,[2,3],4]))
 assert_eq([1,2,3,4], ys);
 let (ys = flatten_all([[1,2],[[3],[4]]]))
 assert_eq([1,2,3,4], ys);
+
+let (
+  xs = array_id(1000),
+  sxs = shuffle(xs)
+) {
+  assert_eq(len(xs), len(sxs));
+  assert_true(xs != sxs);
+  assert_eq(xs, quicksort(sxs));
+}
 
 let (inc = function(x) x + 1) {
   let (xs = [0,1,2])

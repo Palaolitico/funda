@@ -25,6 +25,14 @@ Currently, the *recommended* way to run it is:
 for spec in spec/*_spec.scad; do echo $spec; time openscad -o /dev/null --export-format binstl $spec; done
 ```
 
+Other libraries with similar scope
+----------------------------------------------------------------------
+
+- [funcutils](https://github.com/thehans/funcutils)
+has a lot of utilities for standard types,
+but has no data structures.
+
+
 OpenSCAD caveats
 ----------------------------------------------------------------------
 
