@@ -24,12 +24,12 @@ stree_size = function(st)
     size = function(node) is_undef(node) ? 0 : 1 + size(node[0]) + size(node[1])
   ) size(st[0]);
 
-stree_depth = function(tp)
+stree_height = function(tp)
   let (
-    depth = function(node) (
-      is_undef(node) ? 0 : 1 + max(depth(node[0]), depth(node[1]))
+    height = function(node) (
+      is_undef(node) ? 0 : 1 + max(height(node[0]), height(node[1]))
     )
-  ) depth(tp[0]);
+  ) height(tp[0]);
 
 stree_array = function(st)
   let (

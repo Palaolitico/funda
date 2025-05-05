@@ -7,7 +7,7 @@ include <../sort.scad>
 for (i = [0:9]) {
   let (
     N = 1024,
-    D = 30, //Depth bound
+    H = 30, //Height bound
     xs = rands(0,1, N),
     tp = foldl(treap_new(compare), xs, treap_add),
     sxs = quicksort(xs),
@@ -17,8 +17,8 @@ for (i = [0:9]) {
     assert_eq(N, treap_size(stp));
     assert_eq(sxs, treap_array(tp));
     assert_eq(sxs, treap_array(stp));
-    assert_true(treap_depth(tp) <= D);
-    assert_true(treap_depth(stp) <= D);
+    assert_true(treap_height(tp) <= H);
+    assert_true(treap_height(stp) <= H);
 
     let (bef = sxs[0]-1) {
       assert_true(!treap_has(tp, bef));
@@ -52,10 +52,10 @@ for (i = [0:9]) {
     ) {
       assert_eq(N-len(rxs), treap_size(tp2));
       assert_eq(N-len(rxs), treap_size(stp2));
-      //Delete can make depth grow, so it is not sensible to check for
-      //assert_true(treap_depth(tp2) <= treap_depth(tp));
-      assert_true(treap_depth(tp2) <= D);
-      assert_true(treap_depth(stp2) <= D);
+      //Delete can make height grow, so it is not sensible to check for
+      //assert_true(treap_height(tp2) <= treap_height(tp));
+      assert_true(treap_height(tp2) <= H);
+      assert_true(treap_height(stp2) <= H);
       for (i = [0:N-1]) {
         let (
           key = xs[i],
@@ -73,7 +73,7 @@ for (i = [0:9]) {
 for (i = [0:9]) {
   let (
     N = 1000,
-    D = 30, //Depth bound
+    H = 30, //Height bound
     xs = rands(0,1, N),
     ps = [for (i = [0:N-1]) [xs[i], i]],
     tp = foldl(treap_new(compare), ps, treap_set_entry),
@@ -84,8 +84,8 @@ for (i = [0:9]) {
     assert_eq(N, treap_size(stp));
     assert_eq(sps, treap_array(tp));
     assert_eq(sps, treap_array(stp));
-    assert_true(treap_depth(tp) <= D);
-    assert_true(treap_depth(stp) <= D);
+    assert_true(treap_height(tp) <= H);
+    assert_true(treap_height(stp) <= H);
 
     let (bef = sps[0][0]-1) {
       assert_true(!treap_has(tp, bef));
@@ -128,8 +128,8 @@ for (i = [0:9]) {
     ) {
       assert_eq(N-len(rxs), treap_size(tp2));
       assert_eq(N-len(rxs), treap_size(stp2));
-      assert_true(treap_depth(tp2) <= D);
-      assert_true(treap_depth(stp2) <= D);
+      assert_true(treap_height(tp2) <= H);
+      assert_true(treap_height(stp2) <= H);
       for (i = [0:N-1]) {
         let (
           key = ps[i][0],

@@ -52,7 +52,7 @@ treap_new = function(cmp) [undef, cmp];
 
 treap_size = stree_size;
 
-treap_depth = stree_depth;
+treap_height = stree_height;
 
 treap_array = function(tp)
   let (
