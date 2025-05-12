@@ -36,13 +36,8 @@
  * source permutation *q* (direct permutation *p*).
  */
 
+include <comparison.scad>
 include <array.scad>
-
-compare = function(a,b) a < b ? -1 : a > b ? 1 : 0;
-less_than = function(a,b) a < b;
-less_equal = function(a,b) a <= b;
-greater_equal = function(a,b) a >= b;
-greater_than = function(a,b) a > b;
 
 is_sorted = function(xs, le = less_equal)
   let (
